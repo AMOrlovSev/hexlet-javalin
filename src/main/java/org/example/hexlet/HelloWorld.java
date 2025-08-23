@@ -8,13 +8,11 @@ public class HelloWorld {
             config.bundledPlugins.enableDevLogging();
         });
 
-        app.get("/hello", ctx -> {
-            var name = ctx.queryParam("name");
-            if (name == null || name.isEmpty()) {
-                ctx.result("Hello, World!");
-            } else {
-                ctx.result("Hello, " + name + "!");
-            }
+        app.get("users/{id}/post/{postId}", ctx -> {
+            var id = ctx.pathParamAsClass("id", Long.class).get();
+            var postId = ctx.pathParamAsClass("postId", Long.class).get();
+
+            ctx.result("users/" + id + "/post/" + postId);
         });
 
         app.start(7070);
