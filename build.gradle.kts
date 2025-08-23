@@ -20,10 +20,13 @@ dependencies {
     implementation("org.slf4j:slf4j-simple:2.0.7")
     implementation("io.javalin:javalin-rendering:6.1.3")
     implementation("gg.jte:jte:3.1.9")
+
+    implementation("net.datafaker:datafaker:2.0.2")
+    implementation("com.fasterxml.jackson.core:jackson-databind:2.16.1")
 }
 
 application {
-    mainClass = "org.example.hexlet.HelloWorld"
+    mainClass = "org.example.hexlet.App"
 }
 
 tasks.test {
