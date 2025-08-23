@@ -23,6 +23,17 @@ dependencies {
 
     implementation("net.datafaker:datafaker:2.0.2")
     implementation("com.fasterxml.jackson.core:jackson-databind:2.16.1")
+
+    // Шаблонизатор и его интеграция с Javalin
+    implementation("gg.jte:jte:3.1.9")
+    implementation("io.javalin:javalin-rendering:6.1.3")
+
+    compileOnly("org.projectlombok:lombok:1.18.30")
+    annotationProcessor("org.projectlombok:lombok:1.18.30")
+
+    // For testing
+    testCompileOnly("org.projectlombok:lombok:1.18.30")
+    testAnnotationProcessor("org.projectlombok:lombok:1.18.30")
 }
 
 application {
