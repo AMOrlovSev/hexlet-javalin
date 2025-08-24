@@ -15,6 +15,7 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static io.javalin.rendering.template.TemplateUtil.model;
 
@@ -52,8 +53,16 @@ public class App {
         app.get("/courses", ctx -> {
             var courseDAO = new CourseDAO(connection);
             var courses = courseDAO.findAll();
+
+            var term = ctx.queryParam("term");
+            if (term != null) {
+                courses = courses.stream()
+                        .filter(course -> course.getName().toLowerCase().contains(term.toLowerCase()))
+                        .collect(Collectors.toList());
+            }
+
             var header = "Курсы по программированию";
-            var page = new CoursesPage(courses, header);
+            var page = new CoursesPage(courses, header, term);
             ctx.render("courses/index.jte", model("page", page));
         });
 
