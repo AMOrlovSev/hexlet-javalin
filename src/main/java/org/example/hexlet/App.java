@@ -1,22 +1,30 @@
 package org.example.hexlet;
 
 import io.javalin.Javalin;
+import io.javalin.http.NotFoundResponse;
 import io.javalin.rendering.template.JavalinJte;
 import org.example.hexlet.component.DataInitializer;
 import org.example.hexlet.dao.CourseDAO;
 import org.example.hexlet.dto.courses.CoursePage;
 import org.example.hexlet.dto.courses.CoursesPage;
+import org.example.hexlet.dto.users.UserPage;
+import org.example.hexlet.dto.users.UsersPage;
+import org.example.hexlet.model.User;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.util.List;
 
 import static io.javalin.rendering.template.TemplateUtil.model;
 
 public class App {
     private static Connection connection;
+    private static final List<User> USERS = Data.getUsers();
 
     public static void main(String[] args) throws Exception {
+
+
 
         try {
             Class.forName("org.h2.Driver");
@@ -46,7 +54,33 @@ public class App {
             var courses = courseDAO.findAll();
             var header = "Курсы по программированию";
             var page = new CoursesPage(courses, header);
-            ctx.render("index.jte", model("page", page));
+            ctx.render("courses/index.jte", model("page", page));
+        });
+
+        app.get("/users/{id}", ctx -> {
+            var id = ctx.pathParamAsClass("id", Long.class).get();
+            User user = USERS.stream()
+                    .filter(u -> id.equals(u.getId()))
+                    .findFirst()
+                    .orElse(null);
+
+            if (user == null) {
+                throw new NotFoundResponse("User not found");
+            }
+
+            var page = new UserPage(user);
+            ctx.render("users/show.jte", model("page", page));
+        });
+
+        app.get("/users", ctx -> {
+            var users = USERS;
+            var header = "Пользователи";
+            var page = new UsersPage(users, header);
+            ctx.render("users/index.jte", model("page", page));
+        });
+
+        app.get("/", ctx -> {
+            ctx.render("index.jte");
         });
 
         app.events(event -> {
