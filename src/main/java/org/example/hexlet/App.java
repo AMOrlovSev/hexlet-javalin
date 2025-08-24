@@ -84,7 +84,13 @@ public class App {
         app.get("/users", ctx -> {
             var users = USERS;
             var header = "Пользователи";
-            var page = new UsersPage(users, header);
+            var term = ctx.queryParam("term");
+            if (term != null) {
+                users = users.stream()
+                        .filter(user -> user.getFirstName().toLowerCase().contains(term.toLowerCase()))
+                        .collect(Collectors.toList());
+            }
+            var page = new UsersPage(users, header, term);
             ctx.render("users/index.jte", model("page", page));
         });
 

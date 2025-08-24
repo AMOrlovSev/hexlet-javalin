@@ -6,6 +6,10 @@
         <div class="mx-auto p-4 py-md-5">
             <main>
                 <h1>${page.getHeader()}</h1>
+                <form action="/users" method="get">
+                    <input type="search" name="term" value="${page.getTerm()}" />
+                    <input type="submit" value="Search" />
+                </form>
                 <table class="table table-striped">
                     @for(var user : page.getUsers())
                         <tr>
